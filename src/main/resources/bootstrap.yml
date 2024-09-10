@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: fileservice
+  cloud:
+    config:
+      uri: ${configServerUrl}
