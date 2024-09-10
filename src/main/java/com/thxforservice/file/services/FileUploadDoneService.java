@@ -1,10 +1,13 @@
 package com.thxforservice.file.services;
 
+import com.thxforservice.global.exceptions.BadRequestException;
+import com.thxforservice.global.rests.ApiRequest;
 import lombok.RequiredArgsConstructor;
 import com.thxforservice.file.constants.FileStatus;
 import com.thxforservice.file.entities.FileInfo;
 import com.thxforservice.file.repositories.FileInfoRepository;
 import org.springframework.stereotype.Service;
+import com.thxforservice.global.Utils;
 
 import java.util.List;
 
@@ -13,6 +16,8 @@ import java.util.List;
 public class FileUploadDoneService {
     private final FileInfoRepository repository;
     private final FileInfoService infoService;
+    private final ApiRequest apiRequest;
+    private final Utils utils;
 
     public void process(String gid, String location) {
 
@@ -23,6 +28,9 @@ public class FileUploadDoneService {
     }
 
     public void process(String gid) {
-        process(gid, null);
+        ApiRequest result = apiRequest.request("/done/" + gid, "file-service");
+        if (!result.getStatus().is2xxSuccessful()) {
+            throw new BadRequestException(utils.getMessage("Fail.file.done"));
+        }
     }
 }
