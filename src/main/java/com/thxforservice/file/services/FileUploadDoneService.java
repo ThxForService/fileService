@@ -27,7 +27,7 @@ public class FileUploadDoneService {
         repository.saveAllAndFlush(items);
     }
 
-    public void process(String gid) {
+public void process(String gid) {
         ApiRequest result = apiRequest.request("/done/" + gid, "file-service");
         if (!result.getStatus().is2xxSuccessful()) {
             throw new BadRequestException(utils.getMessage("Fail.file.done"));
