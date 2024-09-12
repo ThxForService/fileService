@@ -6,27 +6,22 @@ import com.thxforservice.global.exceptions.CommonException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.ss.usermodel.*;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import java.io.*;
+
 import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 
 @Service
 @RequiredArgsConstructor
@@ -68,10 +63,10 @@ public class ExcelUploadService {
                     excel1.setNum(num);
                     excel1.setQ(q);
 
-                    workbook.close(); // 워크북 자원 닫기
+
 
                     try {
-                        excel1Repository.save(excel1); // 엔티티 저장
+                        excel1Repository.saveAndFlush(excel1); // 엔티티 저장
                         System.out.println("저장됨: " + num + ", " + q);
                     } catch (Exception e) {
                         // 예외 세부 사항 로그 출력
@@ -80,7 +75,8 @@ public class ExcelUploadService {
                     }
 
                 }
-
+                System.out.println("Closing workbook");
+                workbook.close(); // 워크북 자원 닫기
 
             } catch (InvalidFormatException e) {
                 throw new CommonException("Excel 파일의 형식이 잘못되었습니다.", HttpStatus.BAD_REQUEST);
@@ -90,6 +86,8 @@ public class ExcelUploadService {
         } catch (IOException e) {
             throw new CommonException("Excel 파일에 접근하는 데 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+
     }
 
 
