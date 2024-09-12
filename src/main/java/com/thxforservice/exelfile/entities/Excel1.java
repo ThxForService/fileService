@@ -1,8 +1,7 @@
 package com.thxforservice.exelfile.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,15 +15,12 @@ import lombok.NoArgsConstructor;
 public class Excel1 {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;  // Auto-generated ID
+
     private Long num;
 
     private String q;
-    public Long getNum() {
-        return num;
-    }
 
-    public void setNum(Long num) {
-        this.num = num;
-    }
 
 }
