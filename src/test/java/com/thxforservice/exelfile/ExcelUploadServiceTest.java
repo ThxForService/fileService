@@ -42,31 +42,39 @@ public class ExcelUploadServiceTest {
     private Excel1Repository excel1Repository;
 
 
-    @DynamicPropertySource
-    static void dynamicProperties(DynamicPropertyRegistry registry) {
-        registry.add("cors.allow.origins", () -> "http://localhost:3000"); // 테스트용 도메인 설정
-    }
+//    @DynamicPropertySource
+//    static void dynamicProperties(DynamicPropertyRegistry registry) {
+//        registry.add("cors.allow.origins", () -> "http://localhost:3000"); // 테스트용 도메인 설정
+//    }
 
 
     @Test
     @Transactional
     void testExcelToDb() {
         try {
-        // 실제 데이터베이스에 Excel 데이터를 삽입
-        excelUploadService.excelToDb();
+            // Call the service method to insert Excel data into the database
+            excelUploadService.excelToDb();
 
-        // 트랜잭션 커밋을 강제
-        entityManager.flush();
+            // Flush the EntityManager to force database operations
+            entityManager.flush();
 
-        // 데이터베이스에 저장된 결과를 검증
-        Iterable<Excel1> excel1s = excel1Repository.findAll();
-        assertNotNull(excel1s);
-        assertTrue(excel1s.iterator().hasNext(), "데이터베이스에 데이터가 삽입되지 않았습니다.");
-        for (Excel1 excel1 : excel1s) {
-            System.out.println("Saved entity: " + excel1);
+            // Retrieve data from the database
+            Iterable<Excel1> excel1s = excel1Repository.findAll();
+
+            // Check if any data exists
+            assertNotNull(excel1s, "Retrieved data should not be null.");
+            assertTrue(excel1s.iterator().hasNext(), "Database should contain data.");
+
+            // Optional: Add additional assertions based on expected data
+            for (Excel1 excel1 : excel1s) {
+                System.out.println("Saved entity: " + excel1);
+                // Example assertion - adjust according to your expectations
+                assertNotNull(excel1.getNum(), "Num should not be null.");
+                assertNotNull(excel1.getQ(), "Q should not be null.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception occurred during the test: " + e.getMessage());
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        fail("테스트 도중 예외가 발생했습니다: " + e.getMessage());
     }
-}}
+}

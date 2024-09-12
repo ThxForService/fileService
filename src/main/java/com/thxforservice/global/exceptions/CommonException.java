@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +13,10 @@ import java.util.Map;
 public class CommonException extends RuntimeException {
     private boolean errorCode;
     private HttpStatus status;
-    private Map<String, List<String>> errorMessages;
+    private Map<String, List<String>> errorMessages = new HashMap<>(); // 초기화 추가
 
     public CommonException(String message) {
-        this(message, HttpStatus.INTERNAL_SERVER_ERROR); // 기본 응답 코드는 500
+        this(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public CommonException(String message, HttpStatus status) {
