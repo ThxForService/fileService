@@ -19,21 +19,27 @@ public class MemberUtil {
     }
 
     public boolean isAdmin() {
-        if (isLogin()) {
-            List<Authorities> authorities = getMember().getAuthorities();
-            return authorities.stream().anyMatch(s -> s.getAuthority().equals(Authority.ADMIN));
-        }
-        return false;
+        return isLogin() && getMember().getAuthority() == Authority.ADMIN;
     }
 
-    public Member getMember() {
+    public boolean isCounselor() {
+        return isLogin() && getMember().getAuthority() == Authority.COUNSELOR;
+    }
+
+    public boolean isStudent() {
+        return isLogin() && getMember().getAuthority() == Authority.STUDENT;
+    }
+
+    public <T extends Member> T getMember() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof MemberInfo memberInfo) {
-            return memberInfo.getMember();
+
+            return (T)memberInfo.getMember();
         }
 
         return null;
     }
+
 }
