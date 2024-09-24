@@ -59,7 +59,7 @@ public class LoginFilter extends GenericFilterBean {
 
 
         try {
-            String apiUrl = utils.url("/account", "member-service");
+            String apiUrl = utils.url("/account", "memberservice");
             // api서버 주소/account
 
             HttpHeaders headers = new HttpHeaders();
@@ -73,16 +73,12 @@ public class LoginFilter extends GenericFilterBean {
                 if (data != null && data.isSuccess()) {
                     String json = om.writeValueAsString(data.getData());
                     Member member = om.readValue(json, Member.class);
-                    List<Authorities> tmp = member.getAuthorities();
-                    if (tmp == null || tmp.isEmpty()) {
-                        Authorities authorities = new Authorities();
-                        authorities.setAuthority(Authority.USER);
-                        tmp = List.of(authorities);
-                    }
 
-                    List<SimpleGrantedAuthority> authorities = tmp.stream()
-                            .map(a -> new SimpleGrantedAuthority(a.getAuthority().name()))
-                            .toList();
+                    Authority authority = member.getAuthority();
+                    List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
+                    if (authority == Authority.COUNSELOR) {
+                        authorities.add(new SimpleGrantedAuthority(Authority.COUNSELOR.name()));
+                    }
 
                     MemberInfo memberInfo = MemberInfo.builder()
                             .email(member.getEmail())
