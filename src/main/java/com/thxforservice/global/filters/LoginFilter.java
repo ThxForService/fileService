@@ -76,9 +76,6 @@ public class LoginFilter extends GenericFilterBean {
 
                     Authority authority = member.getAuthority();
                     List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
-                    if (authority == Authority.COUNSELOR) {
-                        authorities.add(new SimpleGrantedAuthority(Authority.COUNSELOR.name()));
-                    }
 
                     MemberInfo memberInfo = MemberInfo.builder()
                             .email(member.getEmail())
